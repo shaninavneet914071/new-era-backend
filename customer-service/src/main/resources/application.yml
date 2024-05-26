@@ -1,0 +1,64 @@
+#spring.application.name=customer-service
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: shaninavneet914071@gmail.com
+    password: jcfl gkka pmpl tgge
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  application:
+    name: CUSTOMER-SERVICE
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/customer-realm
+  application-context:
+    name: CUSTOMER-SERVICE
+  datasource:
+    url: jdbc:postgresql://localhost:5432/customers
+#    ?user=postgres&password=admin
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+#  profiles:
+#    active: dev
+server:
+  port: 8083
+  servlet:
+    context-path: /customer-service
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+keycloak:
+  realm: customer-realm
+  resource: customer-auth
+  auth-server-url: http://localhost:8081
+  ssl-required: none
+  credentials:
+    provider: secret
+    secret: KatcOW3yr2pYWJUXx9EMwCShTSGZ8VKQ
+  bearer-only: true
+  use-resource-role-mappings: true

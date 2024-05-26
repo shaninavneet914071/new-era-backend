@@ -1,0 +1,11 @@
+spring:
+  application-context:
+    name: CUSTOMER-SERVICE
+  profiles:
+    active: dev
+server:
+  port: 8083
+  servlet:
+    context-path: /customer-service
+
+
