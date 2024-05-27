@@ -1,6 +1,5 @@
 package com.nsh.customerservice;
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
@@ -16,11 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableSpringDataWebSupport
 @SecurityScheme(
 	   name	= "Keycloak",
-openIdConnectUrl = "http://localhost:8081/realms/customer-realm/.well-known/openid-configuration",
 		scheme = "bearer",
-		type = SecuritySchemeType.OPENIDCONNECT,
-		in = SecuritySchemeIn.HEADER
-)
+		bearerFormat ="JWT",
+		type = SecuritySchemeType.HTTP)
 @EnableDiscoveryClient
 public class CustomerServiceApplication {
 
