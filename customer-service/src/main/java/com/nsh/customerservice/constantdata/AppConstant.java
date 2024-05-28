@@ -5,4 +5,6 @@ public class AppConstant {
     public static final String CLIENT_ID = "customer-auth";
     public static final String CLIENT_SECRET = "KatcOW3yr2pYWJUXx9EMwCShTSGZ8VKQ";
     public static final String GRANT_TYPE = "password";
+    public static final String EMAIL_REGX = "^[a-zA-Z0-9._%+-]+@gmail.com$";
+
 }
