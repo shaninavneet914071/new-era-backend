@@ -3,6 +3,7 @@ package com.nsh.customerservice.exceptionhandler;
 import com.nsh.customerservice.exceptionhandler.exceptions.CustomerAlreadyExist;
 import com.nsh.customerservice.exceptionhandler.exceptions.NotFoundException;
 import com.nsh.customerservice.exceptionhandler.payload.ExceptionResponse;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.util.Objects;
 public class ApiExceptionHandler {
     @ExceptionHandler(value = {
             MethodArgumentNotValidException.class,
-            HttpMessageNotReadableException.class,
+            HttpMessageNotReadableException.class
     })
     public <T extends BindException> ResponseEntity<ExceptionResponse> handleValidationException(final T e) {
 
@@ -39,9 +40,8 @@ public class ApiExceptionHandler {
                         .build(), badRequest);
     }
 
-    @ExceptionHandler({CustomerAlreadyExist.class, NotFoundException.class})
+    @ExceptionHandler({CustomerAlreadyExist.class, ConstraintViolationException.class, NotFoundException.class})
     public<T extends RuntimeException> ResponseEntity<ExceptionResponse> handleArithmeticException(final T ex) {
-        // Handling ArithmeticException
         return new ResponseEntity<> (ExceptionResponse.builder().msg(ex.getMessage()).timestamp(ZonedDateTime.now()).httpStatus(HttpStatus.BAD_REQUEST).build(),HttpStatus.BAD_REQUEST);
     }
 }

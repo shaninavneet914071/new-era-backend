@@ -33,6 +33,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers(HttpMethod.GET,"/customer/welcome","/api/v1/customer/register","/api/v1/customer/login").permitAll()
                     .requestMatchers(HttpMethod.GET,"/customer/fetchAll").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/customer/send-verification").permitAll()
                     .requestMatchers(HttpMethod.GET,"/test/customer").permitAll()
                     .anyRequest().permitAll();
 
