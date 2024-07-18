@@ -216,25 +216,23 @@ public class CustomerServiceImpl implements CustomerService {
 //        return users.isEmpty() ? null : users.get(0);
         String requiredMail;
         Optional<Customer> customer = Optional.empty();
-        if(custId!=null){
+        if (custId != null) {
 
-            customer =customerRepo.findById(custId);
+            customer = customerRepo.findById(custId);
         }
-        if(request!=null){
+        if (request != null) {
             requiredMail = TokenData.getEmailFromToken(request.getHeader(HttpHeaders.AUTHORIZATION));
-        }
-        else if (email!=null){
-            requiredMail =email;
-        }
-        else{
+        } else if (email != null) {
+            requiredMail = email;
+        } else {
             throw new IllegalArgumentException("Please provide the mail to see your profile");
         }
         if (keycloakService.getUserByEmail(email) != null) {
-           customer = customerRepo.findByEmail(requiredMail);
+            customer = customerRepo.findByEmail(requiredMail);
         }
-            if(customer.isEmpty()){
-                throw new NotFoundException("Customer not found !!!");
-            }
+        if (customer.isEmpty()) {
+            throw new NotFoundException("Customer not found !!!");
+        }
 
         return customerMapper.map(customerRepo.findByEmail(requiredMail), CustomerDto.class);
 

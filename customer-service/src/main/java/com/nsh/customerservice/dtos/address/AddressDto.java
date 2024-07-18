@@ -1,15 +1,10 @@
 package com.nsh.customerservice.dtos.address;
 
-import com.nsh.customerservice.entity.Customer;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UuidGenerator;
 
-import java.sql.Types;
 import java.util.UUID;
 
 @AllArgsConstructor

@@ -27,7 +27,7 @@ spring:
     name: CUSTOMER-SERVICE
   datasource:
     url: jdbc:postgresql://localhost:5432/customers
-#    ?user=postgres&password=admin
+    #    ?user=postgres&password=admin
     username: postgres
     password: admin
   jpa:

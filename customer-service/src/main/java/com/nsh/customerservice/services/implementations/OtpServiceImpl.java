@@ -3,6 +3,7 @@ package com.nsh.customerservice.services.implementations;
 import com.nsh.customerservice.dao.OtpRepo;
 import com.nsh.customerservice.entity.Otp;
 import com.nsh.customerservice.exceptionhandler.exceptions.NotFoundException;
+import com.nsh.customerservice.services.OtpService;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,14 +14,15 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class OtpService {
+public class OtpServiceImpl implements OtpService {
 
+    private static final long OTP_VALID_DURATION = 5 * 60 * 1000;
+    private static final String otpSubject = "Here's your One Time Password (OTP) - Expire in 5 minutes!";
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private OtpRepo otpRepo;
-    private static final long OTP_VALID_DURATION = 5 * 60 * 1000;
-private static final String otpSubject = "Here's your One Time Password (OTP) - Expire in 5 minutes!";
+
     public void sendOtp(String email) {
         String OTP = RandomString.make(8);
         String content = "<p>Hello User </p>"
@@ -41,16 +43,16 @@ private static final String otpSubject = "Here's your One Time Password (OTP) - 
         otpRepo.save(otp);
         System.out.println("Message sent successfully");
     }
-    public String verifyEmail(String email,String otp){
-       Optional<Otp> realOtp = otpRepo.findByEmail(email);
-       if(realOtp.isEmpty()){
-           throw new NotFoundException("Wrong Otp !!");
-       }
-       else{
-           if(otp.equals(realOtp.get().getOneTimePassword()) && new Date().after(realOtp.get().getExpiresIn()) ){
-return null;
-           }
-       }
+
+    public String verifyEmail(String email, String otp) {
+        Optional<Otp> realOtp = otpRepo.findByEmail(email);
+        if (realOtp.isEmpty()) {
+            throw new NotFoundException("Wrong Otp !!");
+        } else {
+            if (otp.equals(realOtp.get().getOneTimePassword()) && new Date().after(realOtp.get().getExpiresIn())) {
+                return null;
+            }
+        }
         return email;
     }
 }

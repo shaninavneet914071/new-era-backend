@@ -41,7 +41,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler({CustomerAlreadyExist.class, ConstraintViolationException.class, NotFoundException.class})
-    public<T extends RuntimeException> ResponseEntity<ExceptionResponse> handleArithmeticException(final T ex) {
-        return new ResponseEntity<> (ExceptionResponse.builder().msg(ex.getMessage()).timestamp(ZonedDateTime.now()).httpStatus(HttpStatus.BAD_REQUEST).build(),HttpStatus.BAD_REQUEST);
+    public <T extends RuntimeException> ResponseEntity<ExceptionResponse> handleArithmeticException(final T ex) {
+        return new ResponseEntity<>(ExceptionResponse.builder().msg(ex.getMessage()).timestamp(ZonedDateTime.now()).httpStatus(HttpStatus.BAD_REQUEST).build(), HttpStatus.BAD_REQUEST);
     }
 }

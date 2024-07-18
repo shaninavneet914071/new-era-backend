@@ -10,11 +10,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+
 @AllArgsConstructor
 @Builder
 @Data
@@ -25,9 +25,9 @@ public class ExceptionResponse implements Serializable {
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstant.ZONED_DATE_TIME_FORMAT)
     private final ZonedDateTime timestamp;
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private Throwable throwable;
     private final HttpStatus httpStatus;
     private final String msg;
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    private Throwable throwable;
 
 }

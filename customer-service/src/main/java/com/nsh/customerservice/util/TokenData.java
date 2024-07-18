@@ -5,6 +5,7 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 import java.util.Base64;
 import java.util.UUID;
+
 public class TokenData {
     public static String parseHeaderToken(String headerToken) {
         String token = null;
@@ -13,14 +14,17 @@ public class TokenData {
         }
         return token;
     }
+
     private static String decode(String encodedString) {
         return new String(Base64.getUrlDecoder().decode(encodedString));
     }
+
     @SneakyThrows
     public static JSONObject getPayloadFromToken(String token) {
         String[] parts = token.split("\\.");
         return new JSONObject(decode(parts[1]));
     }
+
     @SneakyThrows
     public static String getNameFromToken(String token) {
         String name = null;
@@ -28,6 +32,7 @@ public class TokenData {
         name = payload.getString("name");
         return name;
     }
+
     @SneakyThrows
     public static UUID getUserIdFromToken(String token) {
         UUID userId = null;

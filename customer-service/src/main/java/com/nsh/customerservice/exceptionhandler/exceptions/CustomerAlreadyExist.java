@@ -1,6 +1,6 @@
 package com.nsh.customerservice.exceptionhandler.exceptions;
 
-public class CustomerAlreadyExist extends RuntimeException{
+public class CustomerAlreadyExist extends RuntimeException {
     public CustomerAlreadyExist() {
         super();
     }

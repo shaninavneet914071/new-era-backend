@@ -23,7 +23,7 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-//    @Autowired
+    //    @Autowired
 //    JwtAuthConverter jwtAuthConverter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,30 +31,31 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults());
         http.authorizeHttpRequests(authorize -> {
-            authorize.requestMatchers(HttpMethod.GET,"/customer/welcome","/api/v1/customer/register","/api/v1/customer/login").permitAll()
-                    .requestMatchers(HttpMethod.GET,"/customer/fetchAll").hasRole("ADMIN")
+            authorize.requestMatchers(HttpMethod.GET, "/customer/welcome", "/api/v1/customer/register", "/api/v1/customer/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/customer/fetchAll").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/customer/send-verification").permitAll()
-                    .requestMatchers(HttpMethod.GET,"/test/customer").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/test/customer").permitAll()
                     .anyRequest().permitAll();
 
         });
 //        http.oauth2ResourceServer(t-> t.jwt(configurer-> configurer.jwtAuthenticationConverter(jwtAuthConverter)));
 //        http.oauth2ResourceServer(t-> t.jwt(Customizer.withDefaults()));
-        http.sessionManagement(t-> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
+
     @Bean
-    public DefaultMethodSecurityExpressionHandler msecurity(){
-        DefaultMethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler= new DefaultMethodSecurityExpressionHandler();
-defaultMethodSecurityExpressionHandler.setDefaultRolePrefix("");
-return defaultMethodSecurityExpressionHandler;
+    public DefaultMethodSecurityExpressionHandler msecurity() {
+        DefaultMethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler = new DefaultMethodSecurityExpressionHandler();
+        defaultMethodSecurityExpressionHandler.setDefaultRolePrefix("");
+        return defaultMethodSecurityExpressionHandler;
 
     }
 
     @Bean
-    public JwtAuthenticationConverter con(){
-        JwtAuthenticationConverter c= new JwtAuthenticationConverter();
+    public JwtAuthenticationConverter con() {
+        JwtAuthenticationConverter c = new JwtAuthenticationConverter();
         JwtGrantedAuthoritiesConverter cv = new JwtGrantedAuthoritiesConverter();
         cv.setAuthorityPrefix("");
         cv.setAuthoritiesClaimName("roles");

@@ -1,7 +1,6 @@
 package com.nsh.customerservice.config;
 
 import lombok.NonNull;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -23,12 +22,13 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
 
     @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt source) {
-        return new JwtAuthenticationToken(source, Stream.concat(new JwtGrantedAuthoritiesConverter().convert(source).stream(),extractResourceRoles(source).stream()).collect(Collectors.toSet()));
+        return new JwtAuthenticationToken(source, Stream.concat(new JwtGrantedAuthoritiesConverter().convert(source).stream(), extractResourceRoles(source).stream()).collect(Collectors.toSet()));
     }
-    private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt){
-        var resourceAccess= new HashMap<>(jwt.getClaim("resource_access"));
+
+    private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
+        var resourceAccess = new HashMap<>(jwt.getClaim("resource_access"));
         var eternal = (Map<String, List<String>>) resourceAccess.get("account");
         var roles = eternal.get("roles");
-        return  roles.stream().map(role->new SimpleGrantedAuthority("ROLE_"+role.replace("-","_"))).collect(Collectors.toSet());
+        return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.replace("-", "_"))).collect(Collectors.toSet());
     }
 }

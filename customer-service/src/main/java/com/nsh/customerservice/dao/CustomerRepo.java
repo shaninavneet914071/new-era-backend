@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
+
 @Repository
-public interface CustomerRepo extends JpaRepository<Customer,UUID> {
+public interface CustomerRepo extends JpaRepository<Customer, UUID> {
     Optional<Customer> findByEmail(String mail);
 }

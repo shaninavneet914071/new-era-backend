@@ -1,7 +1,8 @@
 package com.nsh.customerservice.entity.address;
 
-import com.nsh.customerservice.entity.Customer;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Types;
 import java.util.UUID;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

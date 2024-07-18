@@ -24,6 +24,7 @@ public class KeycloakAdminClientConfig {
     @Value("${keycloak.realm}")
     private String realm;
     private ResteasyClientBuilder resteasyClientBuilder = new ResteasyClientBuilderImpl();
+
     @Bean
     public Keycloak keycloak() {
         Keycloak keycloak = KeycloakBuilder.builder().
@@ -31,8 +32,8 @@ public class KeycloakAdminClientConfig {
                 grantType(OAuth2Constants.CLIENT_CREDENTIALS).
                 clientId(clientId).clientSecret(secretKey).
 //                username("admin").password("admin").
-                resteasyClient(
-                        resteasyClientBuilder.connectionPoolSize(10).build())
+        resteasyClient(
+        resteasyClientBuilder.connectionPoolSize(10).build())
                 .build();
         return keycloak;
     }
@@ -57,7 +58,6 @@ public class KeycloakAdminClientConfig {
 //    realmName = accessToken.getIssuer();
 //    Access realmAccess = accessToken.getRealmAccess();
 //    roles = realmAccess.getRoles();
-
 
 
 }

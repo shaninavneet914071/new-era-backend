@@ -21,15 +21,18 @@ public class TestController {
     private EmailService mail;
     @Autowired
     private CustomerService customerService;
+
     @GetMapping("/welcome")
     public String hello() {
         return "hello world !!";
     }
+
     @PostMapping("/verify")
     public ResponseEntity<String> addUser(@RequestParam String userId) {
-            customerService.sendEmailVerification(userId);
+        customerService.sendEmailVerification(userId);
         return new ResponseEntity<String>("Verification link sent .", HttpStatus.OK);
     }
+
     @PostMapping("sendMail")
     public ResponseEntity<String> sendTestMail() {
         mail.sendEmail();
@@ -41,8 +44,9 @@ public class TestController {
         customerService.sendVerificationEmail(email);
         return new ResponseEntity<>("sent mail", HttpStatus.OK);
     }
+
     @GetMapping("check-verification")
-    public  ResponseEntity<String> check(@RequestParam String email) {
+    public ResponseEntity<String> check(@RequestParam String email) {
         return new ResponseEntity<>("body :" + customerService.isEmailVerified(email), HttpStatus.OK);
     }
 }

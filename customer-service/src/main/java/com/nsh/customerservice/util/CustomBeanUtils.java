@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+
 @Component
 public class CustomBeanUtils {
     public static void copyPropertiesNotNull(Object dest, Object orig) throws InvocationTargetException, IllegalAccessException {
@@ -41,7 +42,7 @@ public class CustomBeanUtils {
 
         @Override
         public void copyProperty(Object bean, String name, Object value) throws IllegalAccessException, InvocationTargetException {
-            System.out.println(bean+" : "+name+" : "+value);
+            System.out.println(bean + " : " + name + " : " + value);
             if (value == null) return;
             super.copyProperty(bean, name, value);
         }
