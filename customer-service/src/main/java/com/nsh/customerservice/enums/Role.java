@@ -1,5 +1,5 @@
 package com.nsh.customerservice.enums;
 
-public enum Roles {
+public enum Role {
     USER, ADMIN
 }

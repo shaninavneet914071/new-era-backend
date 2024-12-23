@@ -2,7 +2,7 @@ package com.nsh.customerservice.entity;
 
 
 import com.nsh.customerservice.entity.address.Address;
-import com.nsh.customerservice.enums.Roles;
+import com.nsh.customerservice.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +33,7 @@ public class Customer {
     private boolean emailVerified;
     private boolean enabled;
     @Enumerated(EnumType.ORDINAL)
-    private Roles role;
+    private Role role;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Address address;
 }

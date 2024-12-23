@@ -6,7 +6,7 @@ import com.nsh.customerservice.dao.CustomerRepo;
 import com.nsh.customerservice.dtos.CustomerDto;
 import com.nsh.customerservice.entity.Customer;
 import com.nsh.customerservice.entity.KeycloakRequiredActions;
-import com.nsh.customerservice.enums.Roles;
+import com.nsh.customerservice.enums.Role;
 import com.nsh.customerservice.exceptionhandler.exceptions.CustomerAlreadyExist;
 import com.nsh.customerservice.exceptionhandler.exceptions.NotFoundException;
 import com.nsh.customerservice.keycloak.KeycloakAuthResponse;
@@ -132,7 +132,7 @@ public class CustomerServiceImpl implements CustomerService {
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
         user.setRequiredActions(Collections.singletonList(KeycloakRequiredActions.VERIFY_EMAIL.name()));
-        user.singleAttribute("UserType", String.valueOf(Roles.USER));
+        user.singleAttribute("UserType", String.valueOf(Role.USER));
         user.setCredentials(Collections.singletonList(credential));
         user.setEnabled(true);
         RealmResource resource = keycloak.realm(realm);
@@ -162,7 +162,7 @@ public class CustomerServiceImpl implements CustomerService {
             userResource.sendVerifyEmail();
             System.out.println("Verification email has been sent !!");
             Customer customer = CustomerMapper.dtoToCustomer(userDTO, userId);
-            customer.setRole(Roles.valueOf(user.firstAttribute("UserType")));
+            customer.setRole(Role.valueOf(user.firstAttribute("UserType")));
             customerRepo.save(customer);
 
             return "User has been created.Please verify the email to log in";

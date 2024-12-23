@@ -21,6 +21,7 @@
 		<module>customer-service</module>
 		<module>api-gateway</module>
         <module>ServiceRegistry</module>
+		<module>blog-rest-service</module>
 		<!-- Add more modules here -->
 	</modules>
 	<dependencies>
