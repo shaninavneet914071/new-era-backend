@@ -13,5 +13,16 @@
 
     <artifactId>webhook-persistence</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+            <!-- JPA annotations (Entity, Table, Id, etc.) -->
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+            </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

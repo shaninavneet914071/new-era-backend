@@ -1,4 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:webhook-db
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
 logging:
   level:
     root: INFO
     com.neweraorganizations.webhook: INFO
+
+webhook:
+  providers:
+    generic:
+      secret: secret-1
+    stripe:
+      secret: secret-2
+    github:
+      secret: secret-3
+  retry:
+    enabled: true
+    fixed-delay-ms: 20_000
+    max-attempts: 5
+  pending-timeout-ms: 60000  #300000  # 5 minutes
+
+  rate-limit:
+    enabled: true
+    window-ms: 60000   # 1 minute
+    limits:
+      generic: 60
+      stripe: 300
+      github: 120
