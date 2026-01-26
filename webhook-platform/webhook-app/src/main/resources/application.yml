@@ -44,3 +44,8 @@ webhook:
       generic: 60
       stripe: 300
       github: 120
+
+security:
+  jwt:
+    secret: this-is-a-very-long-and-secure-admin-jwt-secret-key-32bytes+
+    expiration-ms: 3600000

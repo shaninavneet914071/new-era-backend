@@ -12,30 +12,32 @@ import org.slf4j.LoggerFactory;
 @Component
 public class WebhookRouter {
 
+    private static final Logger log =
+            LoggerFactory.getLogger(WebhookRouter.class);
+
     private final Map<String, WebhookHandler> handlerMap = new HashMap<>();
-     private static final Logger log = LoggerFactory.getLogger(WebhookRouter.class);
+
     public WebhookRouter(List<WebhookHandler> handlers) {
         for (WebhookHandler handler : handlers) {
-            handlerMap.put(handler.getProvider().toLowerCase(), handler);
+            handlerMap.put(handler.providerKey(), handler);
         }
     }
 
     /**
-     * Routes webhook payload to appropriate provider handler.
-     *
-     * @param provider  the webhook provider (razorpay, github, stripe, etc.)
-     * @param eventType the event type (payment.success, push, etc.)
-     * @param payload   raw webhook payload
+     * Routes webhook to the correct handler.
      */
-    public void route(String provider, String eventType, String payload) {
+    public void route(String providerKey, String eventType, String payload) {
 
-        WebhookHandler handler =
-                handlerMap.getOrDefault(provider.toLowerCase(), null);
+        WebhookHandler handler = handlerMap.get(providerKey);
+
         if (handler == null) {
-            log.warn("No handler found for provider: {}", provider);
+            log.warn("No webhook handler registered | providerKey={}", providerKey);
             return;
         }
-        log.info("Routing webhook | provider={} | event={}", provider, eventType);
+
+        log.info("Routing webhook | providerKey={} | eventType={}",
+                providerKey, eventType);
+
         handler.handle(eventType, payload);
     }
 }

@@ -2,9 +2,11 @@ package com.neweraorganizations.webhook.app.controller;
 
 import com.neweraorganizations.webhook.app.ratelimit.WebhookRateLimiter;
 import com.neweraorganizations.webhook.app.security.ProviderSecretResolver;
+import com.neweraorganizations.webhook.app.service.ProviderService;
 import com.neweraorganizations.webhook.app.service.WebhookAsyncProcessor;
 import com.neweraorganizations.webhook.app.service.WebhookIngestionService;
 import com.neweraorganizations.webhook.core.idempotency.WebhookIdempotencyService;
+import com.neweraorganizations.webhook.core.provider.ProviderContext;
 import com.neweraorganizations.webhook.core.router.WebhookRouter;
 import com.neweraorganizations.webhook.core.security.WebhookSignatureVerifier;
 import com.neweraorganizations.webhook.persistence.entity.WebhookEventEntity;
@@ -14,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/webhook")
@@ -28,6 +32,7 @@ public class WebhookController {
     private final WebhookIngestionService webhookIngestionService;
 
     private final WebhookAsyncProcessor webhookAsyncProcessor;
+    private final ProviderService providerService;
 
     private final WebhookRateLimiter webhookRateLimiter;
 
@@ -35,6 +40,8 @@ public class WebhookController {
             WebhookRouter webhookRouter,
             WebhookIdempotencyService idempotencyService,
             ProviderSecretResolver providerSecretResolver,
+            ProviderService providerService
+            ,
             WebhookIngestionService webhookIngestionService, WebhookAsyncProcessor webhookAsyncProcessor, WebhookRateLimiter webhookRateLimiter
     ) {
         this.webhookRouter = webhookRouter;
@@ -42,12 +49,13 @@ public class WebhookController {
         this.providerSecretResolver = providerSecretResolver;
         this.webhookIngestionService = webhookIngestionService;
         this.webhookAsyncProcessor = webhookAsyncProcessor;
+        this.providerService = providerService;
         this.webhookRateLimiter = webhookRateLimiter;
     }
 
     @PostMapping("/receive")
     public ResponseEntity<String> receiveWebhook(
-            @RequestHeader("X-Provider") String provider,
+            @RequestHeader("X-Provider") String providerKey,
             HttpServletRequest request,
             @RequestHeader("X-Signature") String signature,
             @RequestHeader("X-Event-Id") String eventId,
@@ -55,7 +63,8 @@ public class WebhookController {
             @RequestBody String payload
     ) {
         String clientIp = request.getRemoteAddr();
-
+        ProviderContext provider =
+                providerService.getActiveProvider(providerKey);
         if (!webhookRateLimiter.allow(provider, clientIp)) {
             log.warn("Rate limit exceeded | provider={} | ip={}", provider, clientIp);
             return ResponseEntity
@@ -64,13 +73,16 @@ public class WebhookController {
         }
 
         String normalizedPayload = payload.trim();
-        String secret = providerSecretResolver.resolveSecret(provider);
+        List<String> secrets = providerSecretResolver.resolveActiveSecrets(provider);
         // 1️⃣ Verify signature
-        boolean valid = WebhookSignatureVerifier.verify(
-                normalizedPayload,
-                secret,
-                signature
-        );
+        boolean valid = secrets.stream()
+                .anyMatch(secret ->
+                        WebhookSignatureVerifier.verify(
+                                normalizedPayload,
+                                secret,
+                                signature
+                        )
+                );
 
         if (!valid) {
             webhookIngestionService.saveInitialEvent(

@@ -19,7 +19,6 @@ public class WebhookReplayService {
             LoggerFactory.getLogger(WebhookReplayService.class);
 
     private final WebhookEventRepository webhookEventRepository;
-    private final WebhookRouter webhookRouter;
     private final WebhookAsyncProcessor webhookAsyncProcessor;
 
     private final WebhookRetryProperties retryProperties;
@@ -29,7 +28,6 @@ public class WebhookReplayService {
             WebhookRouter webhookRouter, WebhookAsyncProcessor webhookAsyncProcessor, WebhookRetryProperties retryProperties
     ) {
         this.webhookEventRepository = webhookEventRepository;
-        this.webhookRouter = webhookRouter;
         this.webhookAsyncProcessor = webhookAsyncProcessor;
         this.retryProperties = retryProperties;
     }

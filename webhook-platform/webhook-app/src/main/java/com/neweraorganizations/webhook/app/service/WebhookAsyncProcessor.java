@@ -43,7 +43,7 @@ public class WebhookAsyncProcessor {
             log.info("Async processing webhook | eventId={}", eventId);
 
             webhookRouter.route(
-                    event.getProvider(),
+                    event.getProviderId(),
                     event.getEventType(),
                     event.getPayload()
             );

@@ -1,20 +1,15 @@
 package com.neweraorganizations.webhook.core.handler;
 
-/**
- * Contract for all webhook providers.
- */
 public interface WebhookHandler {
 
     /**
-     * @return provider name (razorpay, github, stripe, etc.)
+     * @return unique provider key (e.g. "razorpay", "github")
+     * This is NOT user input — it's a system identifier.
      */
-    String getProvider();
+    String providerKey();
 
     /**
      * Handle incoming webhook event.
-     *
-     * @param eventType event type
-     * @param payload   raw webhook payload
      */
     void handle(String eventType, String payload);
 }

@@ -11,8 +11,9 @@ public class WebhookEventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "provider", nullable = false)
-    private String provider;
+    @Column(name = "provider_id", nullable = false)
+    private Long providerId;
+
 
     @Column(name = "event_id", nullable = false, unique = true)
     private String eventId;
@@ -41,13 +42,13 @@ public class WebhookEventEntity {
     }
 
     public WebhookEventEntity(
-            String provider,
+            Long providerId,
             String eventId,
             String eventType,
             String payload,
             String status
     ) {
-        this.provider = provider;
+        this.providerId = providerId;
         this.eventId = eventId;
         this.eventType = eventType;
         this.payload = payload;
@@ -61,8 +62,8 @@ public class WebhookEventEntity {
         return id;
     }
 
-    public String getProvider() {
-        return provider;
+    public Long getProviderId() {
+        return providerId;
     }
 
     public String getEventId() {

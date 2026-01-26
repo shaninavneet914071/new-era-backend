@@ -1,6 +1,7 @@
 package com.neweraorganizations.webhook.app.ratelimit;
 
 import com.neweraorganizations.webhook.app.config.WebhookRateLimitProperties;
+import com.neweraorganizations.webhook.core.provider.ProviderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,19 +29,19 @@ public class WebhookRateLimiter {
         this.properties = properties;
     }
 
-    public boolean allow(String provider, String ip) {
+    public boolean allow(ProviderContext provider, String ip) {
 
         if (!properties.isEnabled()) {
             return true;
         }
 
-        Integer limit = properties.getLimits().get(provider);
+        Integer limit = properties.getLimits().get(provider.getProviderId());
         if (limit == null) {
-            return false; // unknown provider → deny
+            return false; // unknown provider.getProviderId() → deny
         }
 
         long now = Instant.now().toEpochMilli();
-        String key = provider + ":" + ip;
+        String key = provider.getProviderId() + ":" + ip;
 
         Counter counter = counters.computeIfAbsent(key, k -> {
             Counter c = new Counter();
@@ -54,8 +55,8 @@ public class WebhookRateLimiter {
                 counter.count.set(0);
             }
             log.info(
-                    "RateLimit check | provider={} | ip={} | count={}",
-                    provider,
+                    "RateLimit check | provider.getProviderId()={} | ip={} | count={}",
+                    provider.getProviderId(),
                     ip,
                     counter.count.get()
             );

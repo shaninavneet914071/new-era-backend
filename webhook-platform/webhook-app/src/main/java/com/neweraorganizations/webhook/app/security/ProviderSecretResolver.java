@@ -1,29 +1,39 @@
 package com.neweraorganizations.webhook.app.security;
 
-import com.neweraorganizations.webhook.app.config.WebhookProviderProperties;
+import com.neweraorganizations.webhook.core.provider.ProviderContext;
+import com.neweraorganizations.webhook.persistence.entity.ProviderSecretEntity;
+import com.neweraorganizations.webhook.persistence.repository.ProviderSecretRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class ProviderSecretResolver {
+public class ProviderSecretResolver{
 
-    private final WebhookProviderProperties properties;
+    private final ProviderSecretRepository providerSecretRepository;
 
-    public ProviderSecretResolver(WebhookProviderProperties properties) {
-        this.properties = properties;
+    public ProviderSecretResolver(
+            ProviderSecretRepository providerSecretRepository
+    ) {
+        this.providerSecretRepository = providerSecretRepository;
     }
 
-    public String resolveSecret(String provider) {
 
-        if (properties.getProviders() == null ||
-                !properties.getProviders().containsKey(provider)) {
-            throw new IllegalArgumentException(
-                    "Unknown webhook provider: " + provider
+    public List<String> resolveActiveSecrets(ProviderContext provider) {
+
+        List<ProviderSecretEntity> secrets =
+                providerSecretRepository.findByProviderIdAndActiveTrue(
+                        provider.getProviderId()
+                );
+
+        if (secrets.isEmpty()) {
+            throw new IllegalStateException(
+                    "No active secrets for provider: " + provider.getProviderKey()
             );
         }
 
-        return properties
-                .getProviders()
-                .get(provider)
-                .getSecret();
+        return secrets.stream()
+                .map(ProviderSecretEntity::getSecret)
+                .toList();
     }
 }

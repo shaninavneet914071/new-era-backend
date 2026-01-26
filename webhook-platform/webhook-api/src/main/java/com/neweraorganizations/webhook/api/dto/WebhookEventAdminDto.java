@@ -1,24 +1,26 @@
 package com.neweraorganizations.webhook.api.dto;
 
 import java.time.Instant;
-
+/**
+ * Admin-facing webhook event representation.
+ */
 public class WebhookEventAdminDto {
 
     private String eventId;
-    private String provider;
+    private String providerKey;
     private String eventType;
     private String status;
     private Instant receivedAt;
 
     public WebhookEventAdminDto(
             String eventId,
-            String provider,
+            String providerKey,
             String eventType,
             String status,
             Instant receivedAt
     ) {
         this.eventId = eventId;
-        this.provider = provider;
+        this.providerKey = providerKey;
         this.eventType = eventType;
         this.status = status;
         this.receivedAt = receivedAt;
@@ -28,8 +30,8 @@ public class WebhookEventAdminDto {
         return eventId;
     }
 
-    public String getProvider() {
-        return provider;
+    public String getProviderKey() {
+        return providerKey;
     }
 
     public String getEventType() {

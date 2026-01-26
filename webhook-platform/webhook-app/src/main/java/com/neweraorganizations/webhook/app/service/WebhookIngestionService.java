@@ -1,5 +1,6 @@
 package com.neweraorganizations.webhook.app.service;
 
+import com.neweraorganizations.webhook.core.provider.ProviderContext;
 import com.neweraorganizations.webhook.persistence.entity.WebhookEventEntity;
 import com.neweraorganizations.webhook.persistence.repository.WebhookEventRepository;
 import jakarta.transaction.Transactional;
@@ -18,7 +19,7 @@ public class WebhookIngestionService {
 
     @Transactional
     public WebhookEventEntity saveInitialEvent(
-            String provider,
+            ProviderContext provider,
             String eventId,
             String eventType,
             String payload,
@@ -26,7 +27,7 @@ public class WebhookIngestionService {
     ) {
         WebhookEventEntity entity =
                 new WebhookEventEntity(
-                        provider,
+                        provider.getProviderId(),
                         eventId,
                         eventType,
                         payload,

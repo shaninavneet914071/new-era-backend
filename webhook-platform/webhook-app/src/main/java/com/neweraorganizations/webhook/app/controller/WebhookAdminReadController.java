@@ -68,7 +68,7 @@ public class WebhookAdminReadController {
                 result.map(event ->
                         new WebhookEventAdminDto(
                                 event.getEventId(),
-                                event.getProvider(),
+                                event.getProviderId(),
                                 event.getEventType(),
                                 event.getStatus(),
                                 event.getReceivedAt()
