@@ -24,14 +24,14 @@ public interface WebhookEventRepository
             Pageable pageable
     );
 
-    Page<WebhookEventEntity> findByProvider(
+    Page<WebhookEventEntity> findByProviderKey(
             String provider,
             Pageable pageable
     );
 
-    Page<WebhookEventEntity> findByStatusAndProvider(
+    Page<WebhookEventEntity> findByStatusAndProviderKey(
             String status,
-            String provider,
+            String providerKey,
             Pageable pageable
     );
 

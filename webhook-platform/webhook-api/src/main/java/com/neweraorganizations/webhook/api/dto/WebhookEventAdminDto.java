@@ -6,20 +6,23 @@ import java.time.Instant;
  */
 public class WebhookEventAdminDto {
 
-    private String eventId;
-    private String providerKey;
-    private String eventType;
-    private String status;
-    private Instant receivedAt;
+    private final String eventId;
+    private final Long providerId;
+    private final String providerKey;
+    private final String eventType;
+    private final String status;
+    private final Instant receivedAt;
 
     public WebhookEventAdminDto(
             String eventId,
+            Long providerId,
             String providerKey,
             String eventType,
             String status,
             Instant receivedAt
     ) {
         this.eventId = eventId;
+        this.providerId = providerId;
         this.providerKey = providerKey;
         this.eventType = eventType;
         this.status = status;
@@ -28,6 +31,10 @@ public class WebhookEventAdminDto {
 
     public String getEventId() {
         return eventId;
+    }
+
+    public Long getProviderId() {
+        return providerId;
     }
 
     public String getProviderKey() {

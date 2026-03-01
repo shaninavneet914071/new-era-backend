@@ -16,7 +16,7 @@ public class ProviderEntity {
     private String providerKey;
 
     private String name;
-    private String status;
+    private boolean isActive;
 
     private Instant createdAt = Instant.now();
 
@@ -41,12 +41,12 @@ public class ProviderEntity {
         this.name = name;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean getIsActive() {
+        return isActive;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public Instant getCreatedAt() {

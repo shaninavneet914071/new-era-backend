@@ -22,7 +22,7 @@ public class ProviderSecretResolver{
     public List<String> resolveActiveSecrets(ProviderContext provider) {
 
         List<ProviderSecretEntity> secrets =
-                providerSecretRepository.findByProviderIdAndActiveTrue(
+                providerSecretRepository.findByProvider_IdAndActiveTrue(
                         provider.getProviderId()
                 );
 

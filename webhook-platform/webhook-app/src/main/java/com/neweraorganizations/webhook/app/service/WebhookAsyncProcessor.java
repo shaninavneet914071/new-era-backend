@@ -1,6 +1,5 @@
 package com.neweraorganizations.webhook.app.service;
 
-import com.neweraorganizations.webhook.core.idempotency.WebhookIdempotencyService;
 import com.neweraorganizations.webhook.core.router.WebhookRouter;
 import com.neweraorganizations.webhook.persistence.entity.WebhookEventEntity;
 import com.neweraorganizations.webhook.persistence.repository.WebhookEventRepository;
@@ -19,15 +18,12 @@ public class WebhookAsyncProcessor {
     private final WebhookRouter webhookRouter;
     private final WebhookEventRepository webhookEventRepository;
 
-    private final WebhookIdempotencyService idempotencyService;
-
     public WebhookAsyncProcessor(
             WebhookRouter webhookRouter,
-            WebhookEventRepository webhookEventRepository, WebhookIdempotencyService idempotencyService
+            WebhookEventRepository webhookEventRepository
     ) {
         this.webhookRouter = webhookRouter;
         this.webhookEventRepository = webhookEventRepository;
-        this.idempotencyService = idempotencyService;
     }
 
     /**
@@ -43,14 +39,13 @@ public class WebhookAsyncProcessor {
             log.info("Async processing webhook | eventId={}", eventId);
 
             webhookRouter.route(
-                    event.getProviderId(),
+                    event.getProviderKey(),
                     event.getEventType(),
                     event.getPayload()
             );
 
             event.setStatus("SUCCESS");
             webhookEventRepository.save(event);
-            idempotencyService.markProcessed(eventId);
             log.info("Async webhook processed successfully | eventId={}",
                     event.getEventId());
 

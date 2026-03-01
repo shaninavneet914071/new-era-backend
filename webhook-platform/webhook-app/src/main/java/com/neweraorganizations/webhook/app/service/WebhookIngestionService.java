@@ -28,12 +28,14 @@ public class WebhookIngestionService {
         WebhookEventEntity entity =
                 new WebhookEventEntity(
                         provider.getProviderId(),
+                        provider.getProviderKey(),
                         eventId,
                         eventType,
                         payload,
                         status
                 );
+            return webhookEventRepository.saveAndFlush(entity);
 
-        return webhookEventRepository.save(entity);
+
     }
 }

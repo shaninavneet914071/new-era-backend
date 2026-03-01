@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:webhook-db
+    url: jdbc:h2:file:./data/webhook-db
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -35,7 +35,7 @@ webhook:
     enabled: true
     fixed-delay-ms: 20_000
     max-attempts: 5
-  pending-timeout-ms: 60000  #300000  # 5 minutes
+  pending-timeout-ms: 300000  #300000  # 5 minutes
 
   rate-limit:
     enabled: true
@@ -44,6 +44,7 @@ webhook:
       generic: 60
       stripe: 300
       github: 120
+      paytm: 120
 
 security:
   jwt:

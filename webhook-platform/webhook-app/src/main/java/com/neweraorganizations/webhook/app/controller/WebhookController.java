@@ -5,12 +5,12 @@ import com.neweraorganizations.webhook.app.security.ProviderSecretResolver;
 import com.neweraorganizations.webhook.app.service.ProviderService;
 import com.neweraorganizations.webhook.app.service.WebhookAsyncProcessor;
 import com.neweraorganizations.webhook.app.service.WebhookIngestionService;
-import com.neweraorganizations.webhook.core.idempotency.WebhookIdempotencyService;
 import com.neweraorganizations.webhook.core.provider.ProviderContext;
 import com.neweraorganizations.webhook.core.router.WebhookRouter;
 import com.neweraorganizations.webhook.core.security.WebhookSignatureVerifier;
 import com.neweraorganizations.webhook.persistence.entity.WebhookEventEntity;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +26,6 @@ public class WebhookController {
     private static final Logger log =
             LoggerFactory.getLogger(WebhookController.class);
 
-    private final WebhookRouter webhookRouter;
-    private final WebhookIdempotencyService idempotencyService;
     private final ProviderSecretResolver providerSecretResolver;
     private final WebhookIngestionService webhookIngestionService;
 
@@ -35,17 +33,13 @@ public class WebhookController {
     private final ProviderService providerService;
 
     private final WebhookRateLimiter webhookRateLimiter;
-
     public WebhookController(
             WebhookRouter webhookRouter,
-            WebhookIdempotencyService idempotencyService,
             ProviderSecretResolver providerSecretResolver,
             ProviderService providerService
             ,
             WebhookIngestionService webhookIngestionService, WebhookAsyncProcessor webhookAsyncProcessor, WebhookRateLimiter webhookRateLimiter
     ) {
-        this.webhookRouter = webhookRouter;
-        this.idempotencyService = idempotencyService;
         this.providerSecretResolver = providerSecretResolver;
         this.webhookIngestionService = webhookIngestionService;
         this.webhookAsyncProcessor = webhookAsyncProcessor;
@@ -74,7 +68,7 @@ public class WebhookController {
 
         String normalizedPayload = payload.trim();
         List<String> secrets = providerSecretResolver.resolveActiveSecrets(provider);
-        // 1️⃣ Verify signature
+        // Verify signature
         boolean valid = secrets.stream()
                 .anyMatch(secret ->
                         WebhookSignatureVerifier.verify(
@@ -100,26 +94,21 @@ public class WebhookController {
                     .body("Invalid webhook signature");
         }
 
-        // 2️⃣ Idempotency check
-        if (idempotencyService.isDuplicate(eventId)) {
-            log.warn("Duplicate webhook received | eventId={}", eventId);
+        try {
+            WebhookEventEntity event = webhookIngestionService.saveInitialEvent(
+                    provider,
+                    eventId,
+                    eventType,
+                    payload,
+                    "PENDING"
+            );
+            // Trigger async processing ONLY
+            webhookAsyncProcessor.processAsync(event.getEventId());
+            return ResponseEntity.ok("Webhook accepted");
 
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Duplicate webhook event");
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-
-        // 3️⃣ Persist initial state
-        WebhookEventEntity event = webhookIngestionService.saveInitialEvent(
-                provider,
-                eventId,
-                eventType,
-                payload,
-                "PENDING"
-        );
-        // 4️⃣ Trigger async processing ONLY
-        webhookAsyncProcessor.processAsync(event.getEventId());
-
-        return ResponseEntity.ok("Webhook accepted");
     }
+
 }

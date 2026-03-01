@@ -4,7 +4,13 @@ import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "webhook_events")
+@Table(name = "webhook_events",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_provider_event",
+                        columnNames = {"provider_id", "event_id"}
+                )
+        })
 public class WebhookEventEntity {
 
     @Id
@@ -14,8 +20,10 @@ public class WebhookEventEntity {
     @Column(name = "provider_id", nullable = false)
     private Long providerId;
 
+    @Column(name = "provider_key", nullable = false)
+    private String providerKey;
 
-    @Column(name = "event_id", nullable = false, unique = true)
+    @Column(name = "event_id", nullable = false)
     private String eventId;
 
     @Column(name = "event_type")
@@ -43,12 +51,14 @@ public class WebhookEventEntity {
 
     public WebhookEventEntity(
             Long providerId,
+            String providerKey,
             String eventId,
             String eventType,
             String payload,
             String status
     ) {
         this.providerId = providerId;
+        this.providerKey = providerKey;
         this.eventId = eventId;
         this.eventType = eventType;
         this.payload = payload;
@@ -64,6 +74,9 @@ public class WebhookEventEntity {
 
     public Long getProviderId() {
         return providerId;
+    }
+    public String getProviderKey() {
+        return providerKey;
     }
 
     public String getEventId() {

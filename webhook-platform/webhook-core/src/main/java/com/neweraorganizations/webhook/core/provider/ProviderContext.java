@@ -4,12 +4,12 @@ public class ProviderContext {
 
     private final Long providerId;
     private final String providerKey;
-    private final String status;
+    private final boolean isActive;
 
-    public ProviderContext(Long providerId, String providerKey, String status) {
+    public ProviderContext(Long providerId, String providerKey, boolean status) {
         this.providerId = providerId;
         this.providerKey = providerKey;
-        this.status = status;
+        this.isActive = status;
     }
 
     public Long getProviderId() {
@@ -20,7 +20,7 @@ public class ProviderContext {
         return providerKey;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean getIsActive() {
+        return isActive;
     }
 }

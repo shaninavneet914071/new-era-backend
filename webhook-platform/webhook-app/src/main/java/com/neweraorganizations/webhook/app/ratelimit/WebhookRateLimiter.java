@@ -35,7 +35,7 @@ public class WebhookRateLimiter {
             return true;
         }
 
-        Integer limit = properties.getLimits().get(provider.getProviderId());
+        Integer limit = properties.getLimits().get(provider.getProviderKey());
         if (limit == null) {
             return false; // unknown provider.getProviderId() → deny
         }

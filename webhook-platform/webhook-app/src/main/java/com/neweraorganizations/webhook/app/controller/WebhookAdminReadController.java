@@ -50,7 +50,7 @@ public class WebhookAdminReadController {
 
         if (status != null && provider != null) {
             result = webhookEventRepository
-                    .findByStatusAndProvider(status, provider, pageable);
+                    .findByStatusAndProviderKey(status, provider, pageable);
 
         } else if (status != null) {
             result = webhookEventRepository
@@ -58,7 +58,7 @@ public class WebhookAdminReadController {
 
         } else if (provider != null) {
             result = webhookEventRepository
-                    .findByProvider(provider, pageable);
+                    .findByProviderKey(provider, pageable);
 
         } else {
             result = webhookEventRepository.findAll(pageable);
@@ -69,6 +69,7 @@ public class WebhookAdminReadController {
                         new WebhookEventAdminDto(
                                 event.getEventId(),
                                 event.getProviderId(),
+                                event.getProviderKey(),
                                 event.getEventType(),
                                 event.getStatus(),
                                 event.getReceivedAt()

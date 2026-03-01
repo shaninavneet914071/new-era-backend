@@ -20,13 +20,13 @@ public class ProviderService {
                         .orElseThrow(() ->
                                 new IllegalArgumentException("Unknown provider"));
 
-        if (!"ACTIVE".equals(providerEntity.getStatus())) {
+        if (!providerEntity.getIsActive()) {
             throw new IllegalStateException("Provider not active");
         }
         return new ProviderContext(
                 providerEntity.getId(),
                 providerEntity.getProviderKey(),
-                providerEntity.getStatus()
+                providerEntity.getIsActive()
         );
     }
 }

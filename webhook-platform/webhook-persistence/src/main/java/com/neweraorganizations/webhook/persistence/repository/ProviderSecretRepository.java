@@ -8,5 +8,5 @@ import java.util.List;
 public interface ProviderSecretRepository
         extends JpaRepository<ProviderSecretEntity, Long> {
 
-    List<ProviderSecretEntity> findByProviderIdAndActiveTrue(Long providerId);
+    List<ProviderSecretEntity> findByProvider_IdAndActiveTrue(Long providerId);
 }

@@ -2,10 +2,6 @@ package com.neweraorganizations.webhook.core.handler;
 
 import org.springframework.stereotype.Component;
 
-/**
- * Default webhook handler.
- * Can be used for testing or as a fallback.
- */
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +12,7 @@ public class GenericWebhookHandler implements WebhookHandler {
             LoggerFactory.getLogger(GenericWebhookHandler.class);
 
     @Override
-    public String getProvider() {
+    public String providerKey() {
         return "generic";
     }
 

@@ -18,11 +18,15 @@ public class SecurityConfig {
     ) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable() /*csrf.ignoringRequestMatchers("/h2-console/**")*/)
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
+                )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/webhook/**").permitAll()
+                    .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .anyRequest().denyAll()
+                .anyRequest().authenticated()
             )
             .addFilterBefore(
                 new JwtAuthFilter(jwtUtil),
